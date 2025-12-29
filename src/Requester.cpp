@@ -1,5 +1,6 @@
 #include "Requester.h"
 #include <QTimer>
+#include <QDebug>
 #include <QNetworkProxyFactory>
 
 Requester::Requester(QObject* pobj) : QObject(pobj){
@@ -10,6 +11,7 @@ Requester::Requester(QObject* pobj) : QObject(pobj){
 
 QNetworkReply* Requester::generateReply(const QUrl& url, const QString& keyHeaderName, const QString& apiKey){
     QNetworkRequest request(url);
+    qDebug() << apiKey << "\n";
     QString copy_apiKey = apiKey.trimmed();
     copy_apiKey.replace("\r", "");
     copy_apiKey.replace("\n", "");
