@@ -1,13 +1,19 @@
 #include "Requester.h"
 #include <QTimer>
+#include <QNetworkProxyFactory>
 
 Requester::Requester(QObject* pobj) : QObject(pobj){
     networkManager = new QNetworkAccessManager(this);
+    QNetworkProxyFactory::setUseSystemConfiguration(false);
+    QNetworkProxy::setApplicationProxy(QNetworkProxy::NoProxy);
 }
 
 QNetworkReply* Requester::generateReply(const QUrl& url, const QString& keyHeaderName, const QString& apiKey){
     QNetworkRequest request(url);
-    request.setRawHeader(keyHeaderName.toUtf8(), apiKey.toUtf8());
+    QString copy_apiKey = apiKey.trimmed();
+    copy_apiKey.replace("\r", "");
+    copy_apiKey.replace("\n", "");
+    request.setRawHeader(keyHeaderName.toUtf8(), copy_apiKey.toUtf8());
     QNetworkReply* reply = networkManager->get(request);
     QTimer* timeout = new QTimer(reply);
     timeout->setSingleShot(true);

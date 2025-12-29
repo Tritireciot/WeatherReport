@@ -81,7 +81,10 @@ void WeatherRequester::slotIsAuthed(int httpStatus, QString message){
     bool success = httpStatus < 300 && httpStatus >= 200;
     if (success) {
         QSettings s;
-        s.setValue("auth/apiKey", message);
+        QString apiKey = message.trimmed();
+        apiKey.replace("\r", "");
+        apiKey.replace("\n", "");
+        s.setValue("auth/apiKey", apiKey);
     }
     resetForm();
     requestButton->setEnabled(success);
